@@ -1,0 +1,102 @@
+require.config({
+	paths:{
+		"underscore":"./lib/underscore",
+		"backbone":"./lib/backbone",
+		"marionette": "./lib/backbone.marionette",
+		"jquery":"./lib/jquery-1.7.2.min",
+		"bl":"./lib/backbone.localStorage"
+		
+	},
+	skim:{
+		'underscore':{
+			exports:"_"
+		},
+		"backbone":{
+			deps:['underscore','jquery'],
+			exports:'Backbone'
+		},
+		marionette: {
+            exports: 'Marionette',
+            deps: ['backbone']
+        },
+        deps: ['jquery', 'underscore']
+	}
+});
+
+
+require(['jquery','underscore','backbone','bl','marionette'],function($,_,Backbone,bl,Marionette){
+		// var Friend = Marionette.Object.extend({
+		//   initialize: function(options){
+		//     console.log(options.name);
+		//   }
+		// });
+
+		// new Friend({name: 'John'});
+
+		// var Friend = Marionette.Object.extend({
+		//   graduate: function() {
+		//   	//绑定事件
+		//     this.triggerMethod('announce', 'I graduated!!!');
+		//   }
+		// });
+
+		// var john = new Friend({name: 'John'});
+
+		// john.on('announce', function(message) {
+		//   console.log(message); // I graduated!!!
+		// })
+
+		// john.graduate();
+
+
+		// define a object with an onDestroy method
+		// var MyObject = Marionette.Object.extend({
+
+		//   onBeforeDestroy: function(arg1, arg2){
+		//     // put custom code here, to destroy this object
+		//   }
+
+		// });
+
+		// // create a new object instance
+		// var obj = new MyObject();
+
+		// // add some event handlers
+		// obj.on("before:destroy", function(arg1, arg2){ ... });
+		// obj.listenTo(something, "bar", function(){...});
+
+		// // destroy the object: unbind all of the
+		// // event handlers, trigger the "destroy" event and
+		// // call the onDestroy method
+		// obj.destroy(arg1, arg2);
+
+
+		var Selections = Marionette.Object.extend({
+
+		  initialize: function(options){
+		    this.selections = {};
+		  },
+
+		  select: function(key, item){
+		    this.triggerMethod("select", key, item);
+		    this.selections[key] = item;
+		  },
+
+		  deselect: function(key, item) {
+		    this.triggerMethod("deselect", key, item);
+		    delete this.selections[key];
+		  }
+
+		});
+
+		var selections = new Selections({
+		  filters: Filters
+		});
+
+		// use the built in EventBinder
+		selections.listenTo(selections, "select", function(key, item){
+		  console.log(item);
+		});
+
+		selections.select('toy', Truck);
+})
